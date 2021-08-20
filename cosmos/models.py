@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 
+from cosmos.helper_functions import compress
+
 
 class GMM(models.Model):
     name = models.CharField(max_length=255)
@@ -70,6 +72,11 @@ class PhotoObject(models.Model):
 
     def __str__(self):
         return "PhotoObject: {" + str(self.photo) + "}"
+
+    def save(self, *args, **kwargs):
+        compressed_img = compress(self.photo)
+        self.photo = compressed_img
+        super().save(*args, **kwargs)
 
 
 class News(models.Model):
